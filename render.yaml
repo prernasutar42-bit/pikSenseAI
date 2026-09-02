@@ -7,6 +7,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: ML_SERVICE_URL
+        value: # URL to the ML service when deployed
 
   - type: web
     name: piksense-ai-client
@@ -15,4 +17,13 @@ services:
     staticPublishPath: ./client/dist
     envVars:
       - key: VITE_API_URL
-        value: # URL of the server once deployed
+        value: # URL of the node server once deployed
+
+  - type: web
+    name: piksense-ai-ml
+    env: python
+    buildCommand: cd ml-service && pip install -r requirements.txt
+    startCommand: cd ml-service && uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
